@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曲の追加</title>
+</head>
+<body>
+    <h1>曲の追加</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ song_form.as_p }}
+        <button type="submit">決定</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プレイリスト一覧</title>
+    <style>
+        .container {
+            display: flex;
+        }
+        .playlist, .sorted-likes {
+            flex: 1;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>プレイリスト一覧</h1>
+    
+    <div class="container">
+        <!-- 左側の通常のプレイリスト -->
+        <div class="playlist">
+            <ul>
+                {% for group in groups %}
+                    <li>
+                        {{ group.name }}
+                        <form action="{% url 'delete_group' group.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">グループを削除</button>
+                        </form>
+                        <ul>
+                            {% for song in group.songs.all %}
+                                <li>
+                                    曲名: <a href="{{ song.url }}" target="_blank">{{ song.title }}</a>
+                                    <form action="{% url 'delete_song' song.id %}" method="POST" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit">曲を削除</button>
+                                    </form>
+
+                                    <!-- いいねボタン -->
+                                    <form action="{% url 'like_song' song.id %}" method="POST" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit">
+                                            {% if request.session.liked == song.id %}
+                                                いいねを解除
+                                            {% else %}
+                                                いいね
+                                            {% endif %}
+                                        </button>
+                                    </form>
+
+                                    <!-- いいねの合計数を表示 -->
+                                    <span>いいねの数: {{ song.likes }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- 右側にいいね数でソートされたリスト -->
+        <div class="sorted-likes">
+            <h2>曲の人気順</h2>
+            <button onclick="sortByLikes()">いいね順に並べる</button>
+            <ul>
+                {% for song in songs_sorted_by_likes %}
+                    <li>
+                        曲名: <a href="{{ song.url }}" target="_blank">{{ song.title }}</a>（いいねの数: {{ song.likes }}）
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script>
+      // ソートボタンを押したときに、いいね数でソートされた結果を表示
+      function sortByLikes() {
+        window.location.href = "?sort_by_likes=true";
+      }
+    </script>
+</body>
+</html>
