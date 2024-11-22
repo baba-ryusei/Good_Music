@@ -12,6 +12,6 @@ urlpatterns = [
     path('delete-song/<int:song_id>/', views.delete_song, name='delete_song'),
     path('delete-artist/<int:song_id>/', views.delete_artist, name='delete_artist'),
     path('delete-group/<int:group_id>/', views.delete_group, name='delete_group'),
-    path('like-song/<int:song_id>/', views.like_song, name='like_song')
+    path('like-song/<int:song_id>/', views.like_song, name='like_song'),
 ]
 
